@@ -1,0 +1,229 @@
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
+{
+    createActions();
+    createMenus();
+    QHBoxLayout *topMenu = new QHBoxLayout;
+
+    topMenu->addWidget(mnuBar);
+
+    add = new QPushButton("Добавить");
+    del = new QPushButton("Удалить");
+    change = new QPushButton("Изменить");
+
+    QHBoxLayout *toolBar = new QHBoxLayout;
+
+    toolBar->addWidget(add);
+    toolBar->addWidget(del);
+    toolBar->addWidget(change);
+
+    QVBoxLayout *topLay = new QVBoxLayout;
+
+    topLay->addLayout(topMenu);
+    topLay->addLayout(toolBar);
+
+    connect(add, SIGNAL(clicked()), this, SLOT(addClicked()));
+    setLayout(topLay);
+}
+
+void MainWindow::createActions()
+{
+    newAct = new QAction(tr("&Новый"), tr("Ctrl+N"), this);
+    openAct = new QAction(tr("&Открыть"), tr("Ctrl+O"), this);
+    saveAct = new QAction(tr("&Сохранить"), tr("Ctrl+S"), this);
+    exitAct = new QAction(tr("&Выход"), tr("Ctrl+Q"), this);
+
+    cancelAct = new QAction(tr("&Отмена"), tr("Ctrl+Z"), this);
+    addAct = new QAction(tr("&Добавить"), tr("Ctrl+A"), this);
+    editAct = new QAction(tr("&Изменить"), tr("Ctrl+E"), this);
+    sortAct = new QAction(tr("&Сортировать"), tr("Ctrl+L"), this);
+
+    helpAct = new QAction(tr("&Справка"), 0, this);
+    aboutAct = new QAction(tr("&О программе"), 0, this);
+}
+
+
+void MainWindow::createMenus()
+{
+    mnuBar = new QMenuBar;
+    file = new QMenu("Файл");
+    file->addAction(openAct);
+    file->addAction(newAct);
+ //   file->addSeparator();
+    file->addAction(saveAct);
+ //   file->addSeparator();
+    file->addAction(exitAct);
+
+    mnuBar->addMenu(file);
+
+    edit = new QMenu("Правка");
+
+    edit->addAction(cancelAct);
+    edit->addSeparator();
+
+    edit->addAction(addAct);
+    edit->addAction(editAct);
+    edit->addSeparator();
+
+    edit->addAction(sortAct);
+
+    mnuBar->addMenu(edit);
+
+    help = new QMenu("Помощь");
+
+    help->addAction(helpAct);
+    help->addSeparator();
+
+    help->addAction(aboutAct);
+    help->addSeparator();
+
+    mnuBar->addMenu(help);
+   /* file->addAction("&Открыть");
+    file->addAction("&Создать");
+    file->addSeparator();
+
+    file->addAction("&Сохранить");
+    file->addSeparator();
+
+    file->addAction("&Выход");
+
+    mnuBar->addMenu(file);
+    mnuBar->addSeparator();
+
+    edit = new QMenu("Правка");
+
+    edit->addAction("&Отменить");
+    edit->addSeparator();
+
+    edit->addAction("&Добавить");
+    edit->addAction("&Изменить");
+    edit->addSeparator();
+
+    edit->addAction("&Сортировать");
+
+    mnuBar->addMenu(edit);
+
+    help = new QMenu("Помощь");
+
+    help->addAction("&Справка");
+    help->addSeparator();
+
+    help->addAction("&О программе");
+    help->addSeparator();
+
+    mnuBar->addMenu(help);*/
+}
+
+void MainWindow::aboutClicked()
+{
+
+}
+
+void MainWindow::addClicked()
+{
+    EditWindow *edWin = new EditWindow(this);
+    edWin->show();
+}
+
+EditWindow::EditWindow(QWidget *parent): QDialog(parent)
+{
+    QLabel *lbl = new QLabel("Выберите тип:");
+
+    carType = new QComboBox();
+    carType->addItem("Фургон");
+    carType->addItem("Рефрижератор");
+    carType->addItem("Самосвал");
+    carType->addItem("Автовоз");
+    carType->addItem("Цистерна");
+
+    QHBoxLayout *cb = new QHBoxLayout;
+    cb->addWidget(lbl);
+    cb->addWidget(carType);
+
+    QLabel *lbl1 = new QLabel("Состояние:");
+    carCondition = new QComboBox();
+    carCondition->addItem("Свободна");
+    carCondition->addItem("В рейсе");
+    carCondition->addItem("На ремонте");
+
+    QHBoxLayout *cb1 = new QHBoxLayout;
+    cb1->addWidget(lbl1);
+    cb1->addWidget(carCondition);
+
+    QLabel *lbl2 = new QLabel("Регистрационный номер: ");
+    carRegion = new QComboBox();
+    for(int i=1; i<=7;i++)
+        carRegion->addItem(QString::number(i));
+
+    carNumber = new QLineEdit;
+    carNumber->setMaxLength(4);
+    carNumber->setMaximumWidth(100);
+    carSym = new QLineEdit;
+    carSym->setMaxLength(2);
+    carSym->setMaximumWidth(50);
+    QHBoxLayout *cb2 = new QHBoxLayout;
+    cb2->addWidget(lbl2);
+    cb2->addWidget(carNumber);
+    cb2->addWidget(carSym);
+    cb2->addWidget(carRegion);
+
+    QLabel *lbl3 = new QLabel("Информация о водителе");
+
+    QLabel *sur = new QLabel("Фамилия");
+    driverSurname = new QLineEdit;
+    QHBoxLayout *cb3 = new QHBoxLayout;
+    cb3->addWidget(sur);
+    cb3->addWidget(driverSurname);
+
+    QLabel *name = new QLabel("Имя");
+    driverName = new QLineEdit;
+    QHBoxLayout *cb4 = new QHBoxLayout;
+    cb4->addWidget(name);
+    cb4->addWidget(driverName);
+
+    QLabel *sname = new QLabel("Отчество");
+    driverSecName = new QLineEdit;
+    QHBoxLayout *cb5 = new QHBoxLayout;
+    cb5->addWidget(sname);
+    cb5->addWidget(driverSecName);
+
+    QLabel *lic = new QLabel("Номер водительского удостоверения");
+    driverLicense = new QLineEdit;
+    driverLicense->setMaxLength(10);
+    QHBoxLayout *cb6 = new QHBoxLayout;
+    cb6->addWidget(lic);
+    cb6->addWidget(driverLicense);
+
+    QVBoxLayout *drInfo = new QVBoxLayout;
+    drInfo->addWidget(lbl3);
+    drInfo->addLayout(cb4);
+    drInfo->addLayout(cb5);
+    drInfo->addLayout(cb6);
+
+    ok = new QPushButton("Добавить");
+    cancel = new QPushButton("Отмена");
+    QHBoxLayout *btns = new QHBoxLayout;
+    btns->addWidget(ok);
+    btns->addWidget(cancel);
+
+    QVBoxLayout *res = new QVBoxLayout;
+    res->addLayout(cb);
+    res->addLayout(cb1);
+    res->addLayout(cb2);
+    res->addLayout(drInfo);
+    res->addLayout(btns);
+    setLayout(res);
+
+    connect(ok, SIGNAL(clicked()), this, SLOT(okClicked()));
+    connect(cancel, SIGNAL(clicked()), this, SLOT(cancelClicked()));
+}
+
+void EditWindow::okClicked()
+{
+    this->close();
+}
+
+void EditWindow::cancelClicked()
+{
+    this->close();
+}
+
